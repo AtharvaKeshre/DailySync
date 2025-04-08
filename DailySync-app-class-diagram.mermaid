@@ -1,0 +1,128 @@
+classDiagram
+    class AdminController {
+        +UserService userService
+        +AppCache appCache
+        +getAllUsers()
+        +createAdmin(User user)
+        +updateUserToAdmin(User user)
+        +clearAppCache()
+    }
+
+    class JournalEntryController {
+        +JournalEntryService journalEntryService
+        +UserService userService
+        +getAllJournalEntriesOfUser()
+        +getAllJournalEntries()
+        +createEntry(JournalEntry myEntry)
+        +getEntryById(ObjectId myId)
+        +deleteEntryById(ObjectId myId)
+        +updateEntryById(ObjectId myId, JournalEntry newEntry)
+    }
+
+    class PublicController {
+        +UserService userService
+        +AuthenticationManager authenticationManager
+        +UserDetailsService userDetailsService
+        +JwtUtils jwtUtils
+        +healthCheck()
+        +signup(User user)
+        +login(User user)
+    }
+
+    class UserController {
+        +UserService userService
+        +UserRepo userRepo
+        +WeatherService weatherService
+        +JournalEntryService journalEntryService
+        +updateUser(User user)
+        +deleteUserById()
+        +getWeatherDetails(String city)
+        +queryUser()
+        +sendEmail()
+    }
+
+    class User {
+        +String id
+        +String userName
+        +String email
+        +String password
+        +List<String> roles
+        +List<JournalEntry> journalEntry
+    }
+
+    class JournalEntry {
+        +ObjectId id
+        +String userId
+        +String title
+        +String content
+        +LocalDateTime date
+    }
+
+    class UserService {
+        +UserRepo userRepo
+        +PasswordEncoder passwordEncoder
+        +saveNewUser(User user)
+        +saveAdmin(User user)
+        +saveExistingUserToAdmin(String username)
+        +saveUser(User user)
+        +getAll()
+        +findByUserName(String username)
+    }
+
+    class JournalEntryService {
+        +JournalEntryRepo journalEntryRepo
+        +UserService userService
+        +saveEntry(JournalEntry journalEntry, String userName)
+        +getAll()
+        +getById(ObjectId id)
+        +deleteById(ObjectId id, String userName)
+    }
+
+    class UserDetailsServiceImpl {
+        +UserRepo userRepo
+        +loadUserByUsername(String username)
+    }
+
+    class AppCache {
+        +Map<String, String> APP_CACHE
+        +ConfigJournalAppRepo configJournalAppRepo
+        +init()
+    }
+
+    class EmailService {
+        +JavaMailSender javaMailSender
+        +sendEmail(String to, String subject, String body)
+    }
+
+    class SentimentConsumerService {
+        +EmailService emailService
+        +consume(SentimentData sentimentData)
+    }
+
+    AdminController --> UserService : uses
+    AdminController --> AppCache : uses
+    
+    JournalEntryController --> JournalEntryService : uses
+    JournalEntryController --> UserService : uses
+    
+    PublicController --> UserService : uses
+    PublicController --> AuthenticationManager : uses
+    PublicController --> UserDetailsService : uses
+    PublicController --> JwtUtils : uses
+    
+    UserController --> UserService : uses
+    UserController --> UserRepo : uses
+    UserController --> WeatherService : uses
+    UserController --> JournalEntryService : uses
+
+    UserService --> UserRepo : uses
+    UserService --> PasswordEncoder : uses
+    
+    JournalEntryService --> JournalEntryRepo : uses
+    JournalEntryService --> UserService : uses
+    
+    UserDetailsServiceImpl --> UserRepo : uses
+    
+    SentimentConsumerService --> EmailService : uses
+
+    User "1" -- "many" JournalEntry : has

@@ -1,0 +1,92 @@
+erDiagram
+    USER ||--o{ JOURNAL_ENTRY : "creates"
+    USER ||--o{ TODO_LIST : "manages"
+    USER ||--o{ USER_PROFILE : "has"
+    USER ||--o{ NOTIFICATION : "receives"
+    
+    USER {
+        string id PK
+        string userName UK
+        string email UK
+        string password
+        datetime createdAt
+        datetime lastLogin
+        boolean isActive
+        boolean isAdmin
+        string role
+    }
+
+    USER_PROFILE {
+        string userId FK`
+        string firstName
+        string lastName
+        string profilePicture
+        string bio
+        date dateOfBirth
+        string location
+    }
+
+    JOURNAL_ENTRY {
+        string id PK
+        string userId FK
+        string title
+        string content
+        datetime createdAt
+        datetime updatedAt
+        string mood
+        string[] tags
+        boolean isPrivate
+    }
+
+    TODO_LIST {
+        string id PK
+        string userId FK
+        string title
+        datetime createdAt
+        datetime dueDate
+        string priority
+        boolean isCompleted
+    }
+
+    TODO_ITEM {
+        string id PK
+        string todoListId FK
+        string description
+        boolean isCompleted
+        datetime createdAt
+        datetime completedAt
+    }
+
+    NOTIFICATION {
+        string id PK
+        string userId FK
+        string type
+        string message
+        datetime createdAt
+        boolean isRead
+    }
+
+    WEATHER_LOG {
+        string id PK
+        string userId FK
+        string city
+        float temperature
+        string conditions
+        datetime timestamp
+    }
+
+    AUTH_TOKEN {
+        string id PK
+        string userId FK
+        string token
+        datetime createdAt
+        datetime expirationTime
+    }
+
+    BACKUP {
+        string id PK
+        string userId FK
+        string backupType
+        datetime backupDate
+        string fileLocation
+    }
